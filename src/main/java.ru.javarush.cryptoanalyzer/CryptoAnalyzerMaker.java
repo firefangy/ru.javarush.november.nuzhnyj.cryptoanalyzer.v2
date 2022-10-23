@@ -51,7 +51,7 @@ class CryptoAnalyzerMaker {
         }
     }
 
-    void bruteForceFile(Map<Integer, Integer> bruteForceResults, List<String> mostCommonWords) {
+    void bruteForceFile(Map<Integer, Integer> cryptoKeyAndNumberCommonWordsDetected, List<String> mostCommonWords) {
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile.getPath()))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -65,10 +65,11 @@ class CryptoAnalyzerMaker {
                         modifiedString[i] = getCharByPosition(position - cryptoKeyLength);
                     }
                 }
+                String[] modifiedStringSplitted = new String(modifiedString).split("\\s+");
                 for (String dictWord : mostCommonWords) {
-                    for (String word : new String(modifiedString).split("\\s+")) {
+                    for (String word : modifiedStringSplitted) {
                         if (word.equals(dictWord)) {
-                            bruteForceResults.put(cryptoKeyLength, bruteForceResults.get(cryptoKeyLength) + 1);
+                            cryptoKeyAndNumberCommonWordsDetected.put(cryptoKeyLength, cryptoKeyAndNumberCommonWordsDetected.get(cryptoKeyLength) + 1);
                         }
                     }
                 }

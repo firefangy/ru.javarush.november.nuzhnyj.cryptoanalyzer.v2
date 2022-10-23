@@ -27,22 +27,26 @@ public class CryptoAnalyzerRunner {
             System.out.print(MODE_INPUT_WELCOME);
             Scanner input = new Scanner(System.in);
             if (input.hasNextInt()) {
-                int i = input.nextInt();
-                if (i == 1) {
-                    System.out.println(CRYPT_MODE);
-                    new CryptoAnalyzerMaker(getInputFile(), getCryptoKey().getKeyLength()).encryptDecryptFile("encrypt");
-                } else if (i == 2) {
-                    System.out.println(DECRYPT_MODE);
-                    new CryptoAnalyzerMaker(getInputFile(), getCryptoKey().getKeyLength()).encryptDecryptFile("decrypt");
-                } else if (i == 3) {
-                    System.out.println(BF_DECRYPT_MODE);
-                    CryptoAnalyzerFile inputFile = getInputFile();
-                    Map<Integer, Integer> bruteForceResults = getBruteForceStatistics(CryptoAnalyzerDict.getMostCommonWords(), inputFile);
-                    new CryptoAnalyzerMaker(inputFile, getTopKeySortedByValue(bruteForceResults)).encryptDecryptFile("decrypt");
-                } else if (i == 0) {
-                    keepGoing = false;
-                } else {
-                    System.err.println(INVALID_INPUT);
+                switch (input.nextInt()) {
+                    case 0:
+                        keepGoing = false;
+                        break;
+                    case 1:
+                        System.out.println(CRYPT_MODE);
+                        new CryptoAnalyzerMaker(getInputFile(), getCryptoKey().getKeyLength()).encryptDecryptFile("encrypt");
+                        break;
+                    case 2:
+                        System.out.println(DECRYPT_MODE);
+                        new CryptoAnalyzerMaker(getInputFile(), getCryptoKey().getKeyLength()).encryptDecryptFile("decrypt");
+                        break;
+                    case 3:
+                        System.out.println(BF_DECRYPT_MODE);
+                        CryptoAnalyzerFile inputFile = getInputFile();
+                        Map<Integer, Integer> bruteForceKey = getBruteForceStatistics(CryptoAnalyzerDict.getMostCommonWords(), inputFile);
+                        new CryptoAnalyzerMaker(inputFile, getTopKeySortedByValue(bruteForceKey)).encryptDecryptFile("decrypt");
+                        break;
+                    default:
+                        System.err.println(INVALID_INPUT);
                 }
             } else {
                 System.err.println(INVALID_INPUT);
@@ -75,7 +79,8 @@ public class CryptoAnalyzerRunner {
         Scanner filename = new Scanner(System.in);
         while (true) {
             String input = filename.nextLine();
-            if (!input.isEmpty() && Files.exists(INPUT_FILES_PATH.resolve(input))) {
+            boolean canOpenFile = Files.exists(INPUT_FILES_PATH.resolve(input)) && !input.isEmpty();
+            if (canOpenFile) {
                 return new CryptoAnalyzerFile(input, INPUT_FILES_PATH);
             } else {
                 System.err.println(FILE_NOT_EXIST);

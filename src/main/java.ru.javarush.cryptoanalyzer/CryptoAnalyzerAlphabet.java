@@ -10,8 +10,10 @@ class CryptoAnalyzerAlphabet {
 
     static final String ALPHABET_SYMBOLS = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLRSTUVWXYZ.,:-!? ";
     static final int ALPHABET_LENGTH = ALPHABET_SYMBOLS.length();
+    static final List<Character> cachedList =  getAlphabetSymbolsList();
 
-    static List<Character> getAlphabetSymbolsList() {
+
+    private static List<Character> getAlphabetSymbolsList() {
         return ALPHABET_SYMBOLS.chars().mapToObj(e -> (char) e).collect(Collectors.toList());
     }
 
@@ -24,6 +26,6 @@ class CryptoAnalyzerAlphabet {
         if (normalizedPosition < 0) {
             normalizedPosition += ALPHABET_LENGTH;
         }
-        return getAlphabetSymbolsList().get(normalizedPosition);
+        return cachedList.get(normalizedPosition);
     }
 }
